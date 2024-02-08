@@ -4,6 +4,7 @@ import { setMenuButton, askQuestionBtn, createEle, appendEleChild } from "../uti
 import { loadQuestionPage } from "./question.js";
 
 const app = new Application(data);
+console.log(app);
 
 const loadTagPage = () => {
     let main = createEle({

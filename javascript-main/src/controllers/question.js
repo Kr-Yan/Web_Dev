@@ -4,7 +4,7 @@ import { setMenuButton, askQuestionBtn, createEle, appendEleChild, displayError,
 import { loadAnswersPage } from "./answer.js";
 
 const app = new Application(data);
-
+console.log(app)
 const loadNewQuestionPage = () => {
   let main = createEle({
     type: "div",
@@ -12,7 +12,7 @@ const loadNewQuestionPage = () => {
     classes: ["right_main"],
   });
   document.getElementById("right_main").replaceWith(main);
-  //let main = document.getElementById("right_main");
+//  let main = document.getElementById("right_main");
 
   // Clear the existing content
   //main.innerHTML = "";
@@ -162,6 +162,8 @@ const loadNewQuestionPage = () => {
             askedBy: usernameInput.value,
           };
 
+
+            // %%%%%%%%%%%%%%%%%%%%%%%%%
           app.addQuestion(question);
 
           loadQuestionPage();
@@ -199,6 +201,7 @@ const loadNewQuestionPage = () => {
   setMenuButton();
 };
 
+//*******************************
 const loadQuestionPage = (
   title_text = "All Questions",
   order = "newest",
@@ -280,14 +283,72 @@ const loadQuestionPage = (
   appendEleChild(main, [header]);
   appendEleChild(main, [getQuestions(order, search)]);
 
+
   setMenuButton("question");
 };
-
 /*
 returns a list of all questions based on an order and a search query if any
 */
+
 const getQuestions = (order = "newest", search = "") => {
-  return []
-};
+
+
+let right= createEle({type:"table", class:["right_main"]})
+  let Qrecord= createEle({type:"div"});
+  let getQ= createEle({innerHTML:app.questions.length+" questions"});
+  appendEleChild(Qrecord,[getQ]);
+  appendEleChild(right,[Qrecord]);
+
+app.questions.forEach((aque)=>{
+
+
+let arow= createEle({type:"tr",classes:["question"]});
+
+
+let first_box= createEle({type:"td"})
+let first_row1= createEle({type:"tr"})
+let first_row2= createEle({type:"tr"})
+
+let view= createEle({classes:["postStats", "left_q"], innerHTML: aque.getQuestionViews()+ "views"});
+let ans_count= createEle({classes: ["postStats", "left_q"], innerHTML: aque.getAnswerCount()+ "answer"});
+appendEleChild(first_row1,[view]);
+appendEleChild(first_row2,[ans_count]);
+appendEleChild(first_box,[first_row1]);
+appendEleChild(first_box,[first_row2]);
+
+let second_box= createEle({type:"td", class:["question_mid"]})
+let second_row1= createEle({type:"tr", class:["tree"]})
+let second_row2= createEle({type:"tr", class:["tree"]})
+let title=createEle({classes:["postTitle", "question_mid"], innerHTML: aque.title})
+
+let tags;
+app.getTagNameFilter(aque.tagIds).forEach((ele)=>{
+tags=createEle({classes:["postTitle", "question_tags","question_mid", "tags_mid","question_tag_button"], innerHTML: ele})
+appendEleChild(second_row2,[tags])
+
+});
+
+appendEleChild(second_row1,[title]);
+
+appendEleChild(second_box,[second_row1]);
+appendEleChild(second_box,[second_row2]);
+
+let third_box= createEle({type:"td", class:["right_main"]})
+let author= createEle({classes:["lastActivity","question_author"], innerHTML: aque.askedBy})
+let date= createEle({classes:["lastActivity","question_meta"], innerHTML: aque.calculateTimeElapsed()})
+appendEleChild(third_box, [author]);
+//appendEleChild(third_box, [date]);
+
+
+appendEleChild(arow,[first_box]);
+appendEleChild(arow,[second_box]);
+appendEleChild(arow,[third_box]);
+appendEleChild(arow,[date]);
+appendEleChild(right,[arow]);
+})
+
+return right;}
+
 
 export { loadQuestionPage, loadNewQuestionPage }
+

@@ -18,14 +18,23 @@ export default class Question {
     returns the number of answers for a question
   */
   getAnswerCount() {
-    return 0;
+  if(!this.ansIds){
+  return 0}
+
+  return this.ansIds.length;
+
+//    return this.ansIds? this.ansIds.length:0;
   }
 
   /*
   add a new answer with id aid to the question
   */
   addAnswer(aid) {
-    return aid;
+  if(!Array.isArray(this.ansIds)){
+  this.ansIds=[];
+  }
+  this.ansIds.push(aid);
+  return aid;
   }
 
   /*
@@ -40,13 +49,15 @@ export default class Question {
   returns the number of views for a question
   */
   getQuestionViews() {
-    return 0;
+    return this.#views;
   }
 
   /*
   increments question view count by 1
   */
   addViewCount() {
-    this.#views = 1;
+    this.#views += 1;
   }
+
+
 }

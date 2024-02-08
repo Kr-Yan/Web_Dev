@@ -58,7 +58,14 @@ const createEle = ({
 };
 
 const appendEleChild = (parent, child) => {
-  child.forEach((c) => parent.appendChild(c));
+  child.forEach((c) => {
+  console.log(c);
+    if (c instanceof Node) { // Check if c is an instance of Node
+      parent.appendChild(c);
+    } else {
+      console.error('Invalid element:', c); // Log or handle the error appropriately
+    }
+  });
 };
 
 const displayError = (element, message) => {

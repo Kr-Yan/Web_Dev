@@ -30,7 +30,24 @@ export default class Application {
   // add an answer to a question qid
   addAnswer = (qid, answer) => {
     let aid = "a" + (this.answers.length + 1);
-    return aid;
+    let newAnswer= new Answer({
+    aid: aid,
+    text: answer.text,
+    ansBy: answer.ansBy,
+    ansDate: new Date()
+    })
+     let question = this.questions.find(question => question.qid === qid);
+
+      if (question) {
+        question.addAnswer(aid);
+        this.answers.push(newAnswer);
+      } else {
+
+        throw new Error(`Question with ID ${qid} not found.`);
+      }
+
+      // Return the generated aid
+      return aid;
   };
 
   /*
@@ -39,16 +56,59 @@ export default class Application {
   */
   addQuestion = (question) => {
     let qid = "q" + new Date();
-    return qid;
-  };
+    let newQuestion = new Question ({
+    qid:qid,
+    title: question.title,
+    text: question.text,
+    tagIds: question.tagIds,
+    askedBy:question.askedBy,
+    askDate: new Date(),
+    ansIds: [],
+    views:0
+    });
+        this.questions.push(newQuestion);
+
+        return qid;
+      };
+//     question.qid=qid;
+//     question.tagIds=[];
+//     question.tags.forEach((t) => {
+//     question.tagIds.push(this.addTag(t));
+//     });
+//     console.log(question);
+//     this.questions.push(new Question(question));
+//     return qid;}
+
 
   /*
   adds a new tag if it does not exist
   returns the tag id of the new tag or the existing tag
   */
-  addTag = (tagname) => {
-    return 0;
-  };
+addTag = (tagname) => {
+  // Check if the tag already exists
+  let existingTag = this.tags.find(tag => tag.name === tagname);
+
+  if (existingTag) {
+    // If it exists, return the existing tag's id
+    return existingTag.id;
+  } else {
+    // If it doesn't exist, generate a new tag ID
+    let newTagId = "t" + (this.tags.length + 1);
+
+    // Create a new Tag object
+    let newTag = new Tag({
+      id: newTagId,
+      name: tagname
+    });
+
+    // Add the new Tag object to the tags array
+    this.tags.push(newTag);
+
+    // Return the new tag's id
+    return newTagId;
+  }
+};
+
 
   /*
   returns the number of questions with a tag id
@@ -89,4 +149,14 @@ export default class Application {
   getTags = () => {
     return this.tags;
   };
+
+  getTagNameFilter(q){
+    let arr=[];
+    for (let i=0; i<q.length; i++){
+    for (let j=0; j<this.tags.length; j++){
+    if (q[i]==this.tags[j].tid){
+    arr.push(this.tags[j].name);}  }
+}
+return arr;
+    }
 }
